@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project A - Smart Reader</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="app-header">
+        <h1>Project A</h1>
+        <div id="current-title">Chapter 1</div>
+    </header>
+
+    <main id="main-reader">
+        <div id="text-display">ここにテキストを貼り付けてください...</div>
+    </main>
+
+    <aside id="side-panel" class="panel">
+        <div class="panel-header">
+            <nav class="tabs">
+                <button class="tab-btn active" onclick="switchTab('words')">単語</button>
+                <button class="tab-btn" onclick="switchTab('notes')">ノート</button>
+            </nav>
+            <button class="close-btn" onclick="togglePanel()">✕</button>
+        </div>
+        
+       <div class="search-container">
+    <div class="panel-controls">
+        <input type="text" id="word-search" placeholder="単語を検索..." oninput="handleSearch()">
+        <div id="anki-wrapper">
+            <label class="anki-toggle">
+                <input type="checkbox" id="anki-mode-check" onchange="toggleAnkiMode()"> 
+                <span>暗記モード</span>
+            </label>
+        </div>
+    </div>
+    <div id="note-modal-overlay" class="modal-overlay">
+    <div class="modal-content">
+        <h2>ノートを追加</h2>
+        <form id="note-form" onsubmit="handleSaveNote(event)">
+            <textarea id="input-note-eng" placeholder="英文ブロック（原文）" rows="4" required></textarea>
+            <textarea id="input-note-memo" placeholder="メモ・和訳ブロック" rows="4"></textarea>
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeNoteModal()">キャンセル</button>
+                <button type="submit" class="btn-save">保存する</button>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+        <div id="panel-content" class="scroll-area"></div>
+    </aside>
+
+    <button id="add-word-btn" class="fab-sub" onclick="openAddModal()">＋</button>
+    <button id="fab-toggle" onclick="togglePanel()">📋</button>
+
+    <div id="word-modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="modal-title">単語を追加</h2>
+            <form id="word-form" onsubmit="handleSaveWord(event)">
+                <input type="text" id="input-word" placeholder="単語" required>
+                <input type="text" id="input-meaning" placeholder="意味" required>
+                <textarea id="input-memo" placeholder="メモ・例文" rows="4"></textarea>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">キャンセル</button>
+                    <button type="submit" class="btn-save">保存する</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/localforage/dist/localforage.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

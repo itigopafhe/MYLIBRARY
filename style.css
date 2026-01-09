@@ -1,0 +1,175 @@
+/* 基本設定 */
+:root { --primary: #8b572a; --bg: #fdfaf5; --text: #333; }
+body { margin: 0; font-family: sans-serif; background: var(--bg); color: var(--text); overflow: hidden; }
+
+/* ヘッダー */
+.app-header { height: 50px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; background: white; border-bottom: 1px solid #ddd; }
+
+/* 読解エリア */
+#main-reader { height: calc(100vh - 50px); overflow-y: auto; padding: 20px; box-sizing: border-box; }
+#text-display { max-width: 800px; margin: 0 auto; line-height: 2.2; font-size: 18px; padding-bottom: 150px; }
+
+/* パネル */
+.panel { position: fixed; background: white; z-index: 1000; transition: transform 0.3s ease; box-shadow: 0 0 15px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+@media (max-width: 767px) { .panel { bottom: 0; left: 0; width: 100%; height: 70%; border-radius: 20px 20px 0 0; transform: translateY(100%); } }
+@media (min-width: 768px) { .panel { top: 0; right: 0; width: 380px; height: 100%; transform: translateX(100%); } }
+.panel.is-open { transform: translate(0, 0) !important; }
+
+/* カードデザイン */
+.scroll-area { flex: 1; overflow-y: auto; padding: 10px; }
+.note-card { margin-bottom: 15px; border: 1px solid #eee; border-radius: 10px; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.card-eng { padding: 12px; background: #f9f9f9; font-weight: bold; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
+.card-memo { padding: 12px; font-size: 14px; color: #666; }
+
+/* 浮いているボタン */
+#fab-toggle, #add-word-btn { position: fixed; right: 25px; border: none; color: white; cursor: pointer; z-index: 1100; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+#fab-toggle { bottom: 25px; width: 60px; height: 60px; border-radius: 30px; background: var(--primary); font-size: 24px; }
+#add-word-btn { bottom: 100px; width: 50px; height: 50px; border-radius: 25px; background: #74a1ad; font-size: 20px; }
+
+/* モーダル */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+.modal-overlay.show { display: flex; }
+.modal-content { background: white; padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; }
+.modal-content input, .modal-content textarea { width: 100%; margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+.btn-save { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; }
+
+/* 検索バー */
+.search-container { padding: 10px; border-bottom: 1px solid #eee; }
+#word-search { width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 20px; }
+
+/* 検索エリアのレイアウト調整 */
+.panel-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.anki-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--primary);
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* 単語カード：左右レイアウト */
+.word-row {
+    display: flex;
+    align-items: center; /* 上下の中央を揃える */
+    justify-content: space-between;
+    gap: 8px; /* 要素間の隙間 */
+}
+
+.word-left {
+    flex: 1.2; /* 単語エリアを少し広めに */
+    font-weight: bold;
+    font-size: 1.05em;
+    white-space: nowrap; /* 改行させない */
+    overflow: hidden;
+    text-overflow: ellipsis; /* 長すぎる単語は「...」にする */
+}
+
+.meaning-right {
+    flex: 1; /* 意味エリア */
+    text-align: right;
+    color: var(--primary);
+    font-weight: bold;
+    font-size: 0.95em;
+    white-space: nowrap; /* 意味も一行に収める */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* メモ・例文：意味の下に配置 */
+.memo-row {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed #eee;
+    font-size: 0.85em;
+    color: #777;
+    line-height: 1.4;
+}
+
+.action-group {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0; /* ボタンが潰れないように固定 */
+}
+
+.action-group button {
+    padding: 2px 6px;
+    font-size: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+    line-height: 1.2;
+}
+
+/* 消（削除）ボタンの色 */
+.action-group button:last-child {
+    color: #e74c3c;
+    border-color: #fadbd8;
+}
+
+/* --- 暗記モードのスタイル --- */
+/* 暗記モードONの時、意味とメモを隠す */
+.anki-mode-on .meaning-right,
+.anki-mode-on .memo-row {
+    visibility: hidden; /* 領域は残したまま透明にする（レイアウトが崩れない） */
+}
+
+/* カードをタップした時だけそのカードを「正解表示」する */
+.note-card.revealed .meaning-right,
+.note-card.revealed .memo-row {
+    visibility: visible !important;
+}
+
+/* ノート（段落メモ）専用のカードデザイン */
+.note-block-card {
+    margin-bottom: 15px;
+    border-radius: 12px;
+    overflow: hidden; /* 角を丸めるため */
+    border: 1px solid #eee;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    background: white;
+}
+
+/* 上段：英文ブロック */
+.block-english {
+    padding: 12px;
+    background: #f8f9fa; /* 少しグレーにして「引用」っぽく */
+    color: #333;
+    font-size: 0.95em;
+    font-weight: 500;
+    line-height: 1.5;
+    border-bottom: 1px solid #eee;
+}
+
+/* 下段：メモ・和訳ブロック */
+.block-memo {
+    padding: 12px;
+    background: white;
+    color: var(--primary); /* 和訳はメインカラーで */
+    font-size: 0.95em;
+    white-space: pre-wrap; /* 改行を反映 */
+}
+
+/* ノート用の操作ボタン（右下に配置） */
+.note-footer {
+    padding: 8px 12px;
+    text-align: right;
+    background: #fff;
+    border-top: 1px dotted #eee;
+}
+.note-footer button {
+    margin-left: 8px;
+    padding: 4px 10px;
+    font-size: 11px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    background: none;
+    cursor: pointer;
+}
